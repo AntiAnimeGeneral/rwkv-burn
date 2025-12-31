@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>现代大模型综述.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="%E7%8E%B0%E4%BB%A3%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0%E4%BB%8E-transformer-%E5%88%B0%E7%BA%BF%E6%80%A7%E6%B3%A8%E6%84%8F%E5%8A%9B">现代大模型综述：从 Transformer 到线性注意力</h1>
+<h2 id="1-%E5%BC%95%E8%A8%80">1. 引言</h2>
+<p>近年来，大语言模型（LLM）彻底改变了人工智能领域。从早期的 RNN 到如今的 Transformer，再到新兴的线性注意力架构，模型架构的演进始终围绕着两个核心矛盾：<strong>训练效率（并行性）<strong>与</strong>推理效率（成本与长序列能力）</strong>。本文将梳理这一演化历史，重点阐述 Transformer 为何成功，以及线性注意力（Linear Attention）如何通过三代演进，试图在保持 Transformer 性能的同时找回 RNN 的推理优势。</p>
+<h2 id="2-rnn-%E4%B8%B2%E8%A1%8C%E8%AE%A1%E7%AE%97">2. RNN ：串行计算</h2>
+<p>在 Transformer 出现之前，RNN（循环神经网络）及其变体 LSTM/GRU 是处理序列数据的主流。然而，它们在处理大规模数据和长序列时遇到了难以克服的物理障碍。</p>
+<h3 id="21-%E6%97%A0%E6%B3%95%E5%B9%B6%E8%A1%8C%E8%AE%AD%E7%BB%83-sequential-computation">2.1 无法并行训练 (Sequential Computation)</h3>
+<p>RNN 的核心公式定义了当前时刻的状态 $h_t$ 严格依赖于上一时刻的状态 $h_{t-1}$：</p>
+<p>$$ h_t = \sigma(W_h h_{t-1} + W_x x_t + b) $$</p>
+<p>其中 $\sigma$ 是非线性激活函数（如 tanh 或 ReLU）。</p>
+<ul>
+<li><strong>时间依赖链</strong>：为了计算第 100 个时间步的 $h_{100}$，必须先计算 $h_{99}$，而 $h_{99}$ 又依赖 $h_{98}$……直到 $h_0$。</li>
+<li><strong>GPU 利用率低</strong>：现代 GPU 擅长进行大规模矩阵并行运算（如一次性计算所有 Token 的 $Q \cdot K^T$），但 RNN 这种“接力跑”式的计算模式迫使 GPU 必须等待上一步完成才能进行下一步。这导致在长序列训练时，GPU 大部分计算单元处于闲置状态，训练速度极慢。</li>
+</ul>
+<h3 id="22-%E6%A2%AF%E5%BA%A6%E6%B6%88%E5%A4%B1%E4%B8%8E%E7%88%86%E7%82%B8-gradient-vanishing--exploding">2.2 梯度消失与爆炸 (Gradient Vanishing &amp; Exploding)</h3>
+<p>RNN 难以捕捉长距离依赖（Long-term Dependencies）的根本原因在于反向传播算法（BPTT）。</p>
+<p>假设我们要计算时刻 $T$ 的损失 $L_T$ 对时刻 $0$ 的输入 $x_0$ 的梯度，根据链式法则：</p>
+<p>$$ \frac{\partial L_T}{\partial x_0} = \frac{\partial L_T}{\partial h_T} \cdot \frac{\partial h_T}{\partial h_{T-1}} \cdot \frac{\partial h_{T-1}}{\partial h_{T-2}} \cdots \frac{\partial h_1}{\partial h_0} \cdot \frac{\partial h_0}{\partial x_0} $$</p>
+<p>其中关键项是连乘部分：</p>
+<p>$$ \prod_{k=1}^{T} \frac{\partial h_k}{\partial h_{k-1}} = \prod_{k=1}^{T} W_h^T \cdot \text{diag}(\sigma'(z_k)) $$</p>
+<ul>
+<li><strong>指数级衰减/增长</strong>：如果权重矩阵 $W_h$ 的特征值（Spectral Radius）小于 1，经过 $T$ 次连乘后，梯度会趋近于 0（<strong>梯度消失</strong>）；如果大于 1，则会趋近于无穷大（<strong>梯度爆炸</strong>）。</li>
+<li><strong>例子</strong>：考虑一个简单的句子：“<strong>Alice</strong> went to the kitchen ... [100 words] ... and <strong>she</strong> cooked dinner.”
+<ul>
+<li>为了预测 &quot;she&quot;，模型需要利用 100 个词之前的 &quot;Alice&quot; 的信息。</li>
+<li>在 RNN 中，&quot;Alice&quot; 的信息需要经过 100 次矩阵乘法和非线性变换。如果每次变换保留 90% 的信息（0.9），那么 100 步后仅剩 $0.9^{100} \approx 0.000026$。</li>
+<li>这意味着模型在更新参数时，几乎“感觉”不到 &quot;Alice&quot; 对 &quot;she&quot; 的影响，从而导致模型“遗忘”了主语。</li>
+</ul>
+</li>
+</ul>
+<p>虽然 LSTM 和 GRU 通过引入门控机制（Gating）缓解了这个问题，但并未从根本上解决串行计算的瓶颈。</p>
+<h2 id="3-transformer-%E5%B9%B6%E8%A1%8C%E4%B8%8E%E6%B3%A8%E6%84%8F%E5%8A%9B">3. Transformer ：并行与注意力</h2>
+<p>2017 年，Google 提出的《Attention Is All You Need》改变了一切。它不仅是一个新架构，更是一种计算范式的转移。Transformer 的强大不仅仅在于并行训练，更在于其组件设计的精妙之处。</p>
+<h3 id="31-%E8%BE%93%E5%85%A5%E5%B1%82%E8%AF%8D%E5%90%91%E9%87%8F%E7%A9%BA%E9%97%B4-token-embeddings">3.1 输入层：词向量空间 (Token Embeddings)</h3>
+<p>在进入复杂的注意力机制之前，我们首先要解决的问题是：<strong>如何让计算机理解单词？</strong></p>
+<ul>
+<li><strong>离散符号到连续向量</strong>：计算机无法直接处理 &quot;Apple&quot; 或 &quot;Banana&quot; 这样的字符串。我们需要建立一个查找表（Embedding Table），将每个词映射为一个固定长度的实数向量（例如 4096 维）。</li>
+<li><strong>语义空间</strong>：这个向量空间具有良好的几何性质。语义相近的词，在空间中的距离更近。
+<ul>
+<li><strong>经典例子</strong>：$Vector(\text{King}) - Vector(\text{Man}) + Vector(\text{Woman}) \approx Vector(\text{Queen})$。</li>
+<li>这意味着模型在输入层就已经具备了初步的推理能力。</li>
+</ul>
+</li>
+</ul>
+<h3 id="32-%E8%AE%AD%E7%BB%83%E8%8C%83%E5%BC%8F%E8%87%AA%E5%9B%9E%E5%BD%92%E7%94%9F%E6%88%90-autoregression">3.2 训练范式：自回归生成 (Autoregression)</h3>
+<p>现代 LLM（如 GPT 系列）通常采用**自回归（Autoregressive）**的方式进行训练。</p>
+<ul>
+<li><strong>目标</strong>：预测下一个 Token。即计算概率 $P(w_t | w_1, w_2, \dots, w_{t-1})$。</li>
+<li><strong>过程</strong>：模型读入当前的上下文，预测下一个最可能出现的词。然后将这个词加入上下文，继续预测下下个词。这就像人类写文章一样，一个字一个字地往后写。</li>
+</ul>
+<h3 id="33-self-attention%E4%BF%A1%E6%81%AF%E7%9A%84%E8%B7%AF%E7%94%B1%E4%B8%8E%E8%81%9A%E5%90%88">3.3 Self-Attention：信息的“路由”与“聚合”</h3>
+<p>Transformer 的核心在于自注意力机制（Self-Attention）。对于初学者来说，直接看矩阵公式 $Attention(Q, K, V) = \text{softmax}(\frac{QK^T}{\sqrt{d}})V$ 可能比较抽象。让我们把它拆解开来，看看对于序列中的<strong>某一个词</strong>，到底发生了什么。</p>
+<h4 id="331-%E6%A0%B8%E5%BF%83%E7%9B%B4%E8%A7%89%E5%9B%9E%E9%A1%BE%E5%8E%86%E5%8F%B2-looking-back">3.3.1 核心直觉：回顾历史 (Looking Back)</h4>
+<p>在自回归推理中，模型只能看到<strong>当前和过去</strong>的信息。
+想象模型正在生成句子：“<strong>Alice</strong> <strong>likes</strong> ...”。
+当前输入是 &quot;likes&quot;，模型需要预测下一个词（比如 &quot;Bob&quot;）。为了做出准确预测，模型必须回顾历史，搞清楚“谁”在喜欢。</p>
+<p>Self-Attention 的本质就是：<strong>用当前词（Query）去查询历史记忆中所有的词（Key），根据匹配程度（Attention Score）将它们的内容（Value）加权融合过来。</strong></p>
+<p><strong>Q 与 K 的相似度理论</strong>：
+为什么我们要计算 $Q \cdot K^T$？在几何上，两个向量的点积（Dot Product）衡量了它们的<strong>相似度</strong>或<strong>对齐程度</strong>。</p>
+<ul>
+<li>如果 $Q$ 和 $K$ 指向相同的方向，点积最大（关注度最高）。</li>
+<li>如果 $Q$ 和 $K$ 垂直（无关），点积为 0（不关注）。</li>
+<li>这就像数据库查询：$Q$ 是你的搜索关键词，$K$ 是数据库中每条记录的索引标签。点积越高，说明这条记录越符合你的搜索意图。</li>
+</ul>
+<h4 id="332-%E5%BA%8F%E5%88%97%E5%BD%A2%E5%BC%8F%E5%85%AC%E5%BC%8F-the-sequence-form">3.3.2 序列形式公式 (The Sequence Form)</h4>
+<p>对于序列中的第 $t$ 个 Token，其输出向量 $y_t$ 的计算公式如下（注意求和上限是 $t$，不能看未来）：</p>
+<p>$$ y_t = \sum_{i=1}^{t} \underbrace{\text{softmax}\left( \frac{q_t \cdot k_i^T}{\sqrt{d}} \right)}<em>{\alpha</em>{t,i} \text{ (注意力权重)}} \cdot v_i $$</p>
+<ul>
+<li>$q_t$：当前词 $t$ 的查询向量（Query）。</li>
+<li>$k_i$：历史中第 $i$ 个词的键向量（Key），$i \le t$。</li>
+<li>$v_i$：历史中第 $i$ 个词的值向量（Value）。</li>
+<li>$\alpha_{t,i}$：第 $t$ 个词对第 $i$ 个词的关注度。</li>
+</ul>
+<h4 id="333-%E5%9B%BE%E8%A7%A3%E4%B8%8E%E4%BE%8B%E5%AD%90%E4%B8%80%E6%AC%A1%E7%9C%9F%E5%AE%9E%E7%9A%84%E6%8E%A8%E7%90%86%E6%AD%A5%E9%AA%A4">3.3.3 图解与例子：一次真实的推理步骤</h4>
+<p>假设模型已经处理了 &quot;Alice&quot;，现在轮到 <strong>&quot;likes&quot;</strong>。
+<strong>当前时刻</strong>：$t=2$
+<strong>输入</strong>：<code>likes</code>
+<strong>历史上下文</strong>：<code>[Alice, likes]</code> (注意：<code>Bob</code> 还没出现，是我们要预测的目标)</p>
+<p>我们来看看如何计算 &quot;likes&quot; 的输出向量，以便预测下一个词。</p>
+<p><strong>第一步：打分 (Matching)</strong>
+&quot;likes&quot; 发出查询 $q_{\text{likes}}$，回顾历史（包括自己）：</p>
+<pre class="hljs"><code><div>q_likes · k_Alice  = 0.9  (很高，因为需要找到主语是谁)
+q_likes · k_likes  = 0.5  (关注自己，提取动词本身的含义)
+</div></code></pre>
+<p><em>(注：此时模型完全不知道 Bob 的存在)</em></p>
+<p><strong>第二步：归一化 (Softmax)</strong>
+将分数转化为概率：</p>
+<pre class="hljs"><code><div>Softmax([0.9, 0.5]) ≈ [0.6, 0.4]
+          ↑    ↑
+       Alice likes
+</div></code></pre>
+<p><strong>第三步：聚合 (Aggregation)</strong>
+根据权重，融合历史信息：</p>
+<pre class="hljs"><code><div>y_likes = 0.6 * v_Alice + 0.4 * v_likes
+</div></code></pre>
+<p><strong>结果</strong>：
+得到的 $y_{\text{likes}}$ 向量融合了 &quot;Alice&quot; (主语) 和 &quot;likes&quot; (谓语) 的信息。
+这个向量经过后续层处理，最终会预测出高概率的词：<strong>&quot;Bob&quot;</strong> 或 <strong>&quot;Apples&quot;</strong>。</p>
+<p><strong>可视化流程</strong>：</p>
+<pre class="hljs"><code><div>       [v_Alice]      [v_likes]      [v_???]
+           |              |             ^
+           | 0.6          | 0.4         | 预测
+           |              |             |
+           +--------------+             |
+                  ↓                     |
+               y_likes -----------------+
+</div></code></pre>
+<h4 id="334-%E5%A4%9A%E5%A4%B4%E6%B3%A8%E6%84%8F%E5%8A%9B-multi-head-attention">3.3.4 多头注意力 (Multi-Head Attention)</h4>
+<ul>
+<li>如果只有一个头，&quot;likes&quot; 可能只能关注到语法成分。但它还需要关注情感色彩等。</li>
+<li>多头机制允许模型在不同的<strong>子空间</strong>里并行关注不同的特征。Head 1 关注指代，Head 2 关注句法依存，Head 3 关注上下文情感。</li>
+</ul>
+<h3 id="34-mlp-feed-forward-networks%E7%9F%A5%E8%AF%86%E7%9A%84%E5%AD%98%E5%82%A8%E4%B8%8E%E5%8A%A0%E5%B7%A5">3.4 MLP (Feed-Forward Networks)：知识的“存储”与“加工”</h3>
+<p>在 Attention 层之后，总是紧跟着一个 MLP（多层感知机）层。为什么？</p>
+<ul>
+<li><strong>结构</strong>：通常是 <code>Linear -&gt; Activation (GeLU/SwiGLU) -&gt; Linear</code>。它独立地作用于每个 Token，不涉及 Token 间的交互。</li>
+<li><strong>分工</strong>：
+<ul>
+<li><strong>Attention</strong> 负责 <strong>Token 之间</strong> 的信息流动（Mixing information between tokens）。它把上下文信息搬运到当前 Token。</li>
+<li><strong>MLP</strong> 负责 <strong>Token 内部</strong> 的信息加工（Mixing information within a token）。</li>
+</ul>
+</li>
+<li><strong>深度理解：键值记忆网络 (Key-Value Memories)</strong>：
+<ul>
+<li>有研究（Geva et al.）认为，MLP 层充当了模型的<strong>知识库</strong>。</li>
+<li>第一层 Linear 类似于检测某种模式（Key），激活函数筛选模式，第二层 Linear 输出该模式对应的属性或结果（Value）。</li>
+<li>例如，Attention 把 &quot;法国&quot; 和 &quot;首都&quot; 搬运到了一起，MLP 层检测到这个组合，然后输出 &quot;巴黎&quot;。</li>
+</ul>
+</li>
+</ul>
+<h3 id="35-%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E8%B5%8B%E4%BA%88%E5%BA%8F%E5%88%97%E7%A7%A9%E5%BA%8F">3.5 位置编码：赋予序列秩序</h3>
+<p>Self-Attention 本质上是集合运算（置换不变性），无法区分 &quot;A hit B&quot; 和 &quot;B hit A&quot;。必须显式注入位置信息。</p>
+<ul>
+<li><strong>绝对位置编码 (Sinusoidal / Learnable)</strong>：
+<ul>
+<li>直接将位置向量 $P_i$ 加到输入 $X_i$ 上。</li>
+<li><strong>缺点</strong>：外推性差。训练时只见过长度 1024，推理时遇到 2048 就不知道 $P_{2048}$ 是什么，或者正弦波从未见过的相位会导致混乱。</li>
+</ul>
+</li>
+<li><strong>相对位置编码 (ALiBi)</strong>：
+<ul>
+<li>不加在输入上，而是直接加在 Attention Score 上。距离越远，扣分越多（$QK^T - m \cdot |i-j|$）。</li>
+<li><strong>优点</strong>：外推性极强，训练短序列，推理长序列效果好。</li>
+</ul>
+</li>
+<li><strong>旋转位置编码 (RoPE - Rotary Positional Embedding)</strong>：
+<ul>
+<li><strong>当前主流</strong>（LLaMA, Qwen 等使用）。</li>
+<li>通过旋转向量的角度来编码相对位置。$q_i$ 旋转 $i\theta$，$k_j$ 旋转 $j\theta$，它们的点积只与相对距离 $(i-j)\theta$ 有关。</li>
+<li><strong>优点</strong>：完美结合了绝对位置的实现便利性和相对位置的数学性质，外推性较好。</li>
+</ul>
+</li>
+</ul>
+<h3 id="36-%E6%AE%8B%E5%B7%AE%E8%BF%9E%E6%8E%A5%E4%B8%8E%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96%E6%B7%B1%E5%BA%A6%E7%9A%84%E5%9F%BA%E7%9F%B3-residuals--layernorm">3.6 残差连接与层归一化：深度的基石 (Residuals &amp; LayerNorm)</h3>
+<p>为什么 Transformer 可以堆叠到上百层而不会梯度消失？这归功于 <strong>残差连接 (Residual Connection)</strong>。</p>
+<h4 id="361-%E6%AE%8B%E5%B7%AE%E8%BF%9E%E6%8E%A5%E7%BC%93%E8%A7%A3%E6%A2%AF%E5%BA%A6%E6%B6%88%E5%A4%B1">3.6.1 残差连接：缓解梯度消失</h4>
+<p>在深层网络中，如果每一层都是 $x_{l+1} = F(x_l)$，那么反向传播时的梯度是连乘的：$\frac{\partial L}{\partial x_0} = \frac{\partial L}{\partial x_L} \cdot \prod \frac{\partial F}{\partial x}$。一旦某层的导数小于 1，连乘几十次后梯度就会趋近于 0，导致<strong>梯度消失</strong>。</p>
+<p>Transformer 采用了残差结构：
+$$ x_{l+1} = x_l + F(x_l) $$
+其中 $F(x_l)$ 是 Attention 或 MLP 层的计算结果。</p>
+<p><strong>数学原理</strong>：
+根据链式法则，反向传播时的梯度计算如下：</p>
+<p>$$ \frac{\partial x_{l+1}}{\partial x_l} = 1 + \frac{\partial F(x_l)}{\partial x_l} $$</p>
+<p>最终的梯度流向是：
+$$ \frac{\partial L}{\partial x_l} = \frac{\partial L}{\partial x_{l+1}} \cdot \left( 1 + \frac{\partial F}{\partial x_l} \right) $$</p>
+<ul>
+<li><strong>恒等映射 (Identity Mapping)</strong>：公式中的常数项 <strong>$1$</strong> 保证了梯度可以直接传回前一层。</li>
+<li><strong>梯度保持</strong>：即使某层的非线性变换部分 $\frac{\partial F}{\partial x_l}$ 梯度很小，梯度信号依然可以通过 $1$ 这一项继续向前传播。这有效缓解了梯度消失问题，使得训练深层网络成为可能。</li>
+</ul>
+<h4 id="362-%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96-layernorm--rmsnorm">3.6.2 层归一化 (LayerNorm / RMSNorm)</h4>
+<p>$$ x_{l+1} = \text{LayerNorm}(x_l + F(x_l)) $$</p>
+<ul>
+<li><strong>作用</strong>：将每一层的输出归一化到均值为 0，方差为 1。</li>
+<li><strong>意义</strong>：这防止了数值在深层网络中剧烈波动（梯度爆炸），进一步稳定了训练过程。</li>
+</ul>
+<h3 id="37-%E8%A1%A8%E8%BE%BE%E8%83%BD%E5%8A%9B%E4%B8%8E%E6%B7%B1%E5%BA%A6%E7%94%B5%E8%B7%AF%E7%9A%84%E5%8D%87%E7%BA%A7">3.7 表达能力与深度：电路的升级</h3>
+<p>为什么 Transformer 需要堆叠几十层？</p>
+<ul>
+<li><strong>残差流 (Residual Stream)</strong>：
+<ul>
+<li>Transformer 的主干是一个贯穿始终的向量流 $x + \text{Sublayer}(x)$。</li>
+<li>每一层（Attention 或 MLP）都是从这个流中“读”出信息，处理后，再“写”回一个增量（Residual Update）。</li>
+</ul>
+</li>
+<li><strong>归纳头 (Induction Heads) 与多步推理</strong>：
+<ul>
+<li><strong>第 1 层</strong>：可能只是简单的词法关注。</li>
+<li><strong>第 2 层</strong>：可以利用第 1 层搬运来的信息。</li>
+<li><strong>Induction Head</strong> 是 In-context Learning 的核心电路。它由两层 Attention 组成：
+<ul>
+<li>Layer 1 关注当前 Token 的上一个 Token（复制历史）。</li>
+<li>Layer 2 搜索历史中出现过类似“上一个 Token”的地方，并把那之后的 Token 搬运过来。</li>
+<li><strong>功能</strong>：实现了“如果 A 后面通常跟 B，那么这次看到 A，我也预测 B”的模式复制能力。</li>
+</ul>
+</li>
+<li>随着层数加深，模型能组合出极其复杂的逻辑电路，实现推理能力。</li>
+</ul>
+</li>
+</ul>
+<h3 id="38-%E8%87%AA%E5%9B%9E%E5%BD%92%E6%8E%A8%E7%90%86%E4%BB%8E%E5%90%91%E9%87%8F%E5%9B%9E%E5%BD%92%E6%96%87%E6%9C%AC">3.8 自回归推理：从向量回归文本</h3>
+<p>当模型经过几十层的计算，输出了最后一个 Token 的向量 $h_{last}$ 后，我们如何得到文本？</p>
+<ol>
+<li>
+<p><strong>Unembedding (反嵌入)</strong>：</p>
+<ul>
+<li>将 $h_{last}$ 乘以 Embedding 矩阵的转置（或单独的输出头），得到一个长度为词表大小（如 50,000）的向量 <strong>Logits</strong>。</li>
+<li>Logits 中的每个数值代表对应词的“得分”。</li>
+</ul>
+</li>
+<li>
+<p><strong>Softmax</strong>：</p>
+<ul>
+<li>将 Logits 转化为概率分布 $P$。</li>
+<li>$P(\text{&quot;apple&quot;}) = 0.1, P(\text{&quot;banana&quot;}) = 0.05, \dots$</li>
+</ul>
+</li>
+<li>
+<p><strong>采样 (Sampling)</strong>：</p>
+<ul>
+<li><strong>Greedy</strong>：直接选概率最大的词。</li>
+<li><strong>Top-K / Top-P (Nucleus)</strong>：从概率最高的 K 个词或累积概率为 P 的集合中随机抽取。这增加了生成的多样性。</li>
+</ul>
+</li>
+<li>
+<p><strong>循环 (Loop)</strong>：</p>
+<ul>
+<li>选出的词被追加到输入序列末尾，再次输入模型，预测下一个词。这就是<strong>自回归</strong>过程。</li>
+</ul>
+</li>
+</ol>
+<h3 id="38-%E8%AE%A1%E7%AE%97%E5%A4%8D%E6%9D%82%E5%BA%A6%E7%93%B6%E9%A2%88">3.8 计算复杂度瓶颈</h3>
+<p>尽管 Transformer 极其强大，但它付出了昂贵的代价：<strong>二次方复杂度</strong>。</p>
+<ul>
+<li><strong>计算量与显存</strong>：计算 Attention 分数矩阵 $A = QK^T$ 需要生成一个 $N \times N$ 的矩阵。</li>
+<li><strong>直观感受</strong>：
+<ul>
+<li>序列长度 $N=1,000$ 时，$N^2 = 1,000,000$。</li>
+<li>序列长度 $N=100,000$ 时，$N^2 = 10,000,000,000$。</li>
+</ul>
+</li>
+<li>这导致标准 Transformer 难以处理长文档、长对话或基因序列等超长上下文任务。显存占用随长度爆炸式增长，推理时的 KV Cache 也消耗巨大。</li>
+</ul>
+<h2 id="4-%E7%BA%BF%E6%80%A7%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9A%84%E6%BC%94%E8%BF%9B%E5%9B%9E%E5%BD%92-on-%E7%9A%84%E5%B0%9D%E8%AF%95">4. 线性注意力的演进：回归 $O(N)$ 的尝试</h2>
+<p>为了解决 $O(N^2)$ 问题，研究者试图将 Attention 线性化，使其推理复杂度降回 $O(N)$（类似 RNN），同时保留并行训练能力。这一过程经历了三代演进。</p>
+<h3 id="41-%E7%AC%AC%E4%B8%80%E4%BB%A3%E6%A0%B8%E6%96%B9%E6%B3%95-kernel-based-%E4%B8%8E%E8%AF%8D%E8%A2%8B%E5%9B%B0%E5%A2%83">4.1 第一代：核方法 (Kernel-based) 与“词袋”困境</h3>
+<p>为了突破计算瓶颈，研究者们回顾了矩阵乘法的结合律。</p>
+<h4 id="411-%E7%BA%BF%E6%80%A7%E5%8C%96%E5%8E%9F%E7%90%86%E7%BB%93%E5%90%88%E5%BE%8B%E7%9A%84%E5%BA%94%E7%94%A8">4.1.1 线性化原理：结合律的应用</h4>
+<p>标准 Attention 的计算顺序是先算 $QK^T$（得到 $N \times N$ 矩阵），再乘 $V$：
+$$ \text{Standard: } (Q K^T) V $$</p>
+<p>如果我们能去掉 Softmax，或者用某种核函数 $\phi(\cdot)$ 近似 Softmax，使得 $Sim(Q, K) = \phi(Q)\phi(K)^T$，那么公式就可以重写为：
+$$ \text{Linear: } \phi(Q) (\phi(K)^T V) $$</p>
+<ul>
+<li><strong>计算优势</strong>：
+<ul>
+<li>先计算 $\phi(K)^T V$，得到一个 $D \times D$ 的矩阵（$D$ 是特征维度，通常很小，如 64 或 128）。这一步复杂度是 $O(N \cdot D^2)$。</li>
+<li>再用 $\phi(Q)$ 去乘这个 $D \times D$ 矩阵。</li>
+<li>总复杂度从 $O(N^2)$ 降到了 $O(N)$。这意味着推理速度和显存占用不再随序列长度爆炸。</li>
+</ul>
+</li>
+</ul>
+<h4 id="412-%E9%80%92%E5%BD%92%E5%BD%A2%E5%BC%8F-recurrent-view">4.1.2 递归形式 (Recurrent View)</h4>
+<p>这种线性 Attention 可以被写成类似 RNN 的递归形式。定义记忆状态 $S_t = \sum_{i=1}^t \phi(k_i) v_i^T$：
+$$ S_t = S_{t-1} + \phi(k_t) v_t^T $$
+$$ y_t = \phi(q_t) S_t $$</p>
+<p><strong>键值记忆</strong>：
+我们可以将矩阵 $S_t$ 理解为一个<strong>联想记忆库</strong>。</p>
+<ul>
+<li><strong>写入 (Write)</strong>：$S_t = S_{t-1} + k_t v_t^T$。这本质上是 Hebbian Learning（赫布学习规则）的一种形式。我们将键值对 $(k_t, v_t)$ 存储到矩阵中。</li>
+<li><strong>读取 (Read)</strong>：$y_t = S_t q_t$。当我们用查询向量 $q_t$ 去乘矩阵时，实际上是在进行检索：
+$$ y_t = (\sum k_i v_i^T) q_t = \sum v_i (k_i^T q_t) $$
+结果是所有存储的 $v_i$ 的加权和，权重正是查询 $q_t$ 与键 $k_i$ 的相似度。</li>
+</ul>
+<h4 id="413-%E8%87%B4%E5%91%BD%E7%BC%BA%E9%99%B7%E8%AF%8D%E8%A2%8B%E6%95%88%E5%BA%94-bag-of-words">4.1.3 致命缺陷：“词袋”效应 (Bag of Words)</h4>
+<p>虽然解决了速度问题，但第一代线性 Attention（如 Linear Transformer, Performer）效果通常不如标准 Transformer。</p>
+<ul>
+<li><strong>记忆是简单的累加</strong>：观察公式 $S_t = \sum \phi(k_i) v_i^T$，这本质上是一个求和操作。</li>
+<li><strong>缺乏遗忘机制</strong>：模型被迫“记住”所有历史信息，无法根据当前上下文丢弃无关信息。随着序列变长，$S_t$ 中积累的噪声越来越多，有效信号被淹没。</li>
+<li><strong>位置信息模糊</strong>：虽然可以加位置编码，但由于记忆是加性的，模型很难区分“Alice hit Bob”和“Bob hit Alice”在深层语义上的区别（如果位置编码被淹没）。这被称为<strong>词袋问题</strong>——模型知道出现了哪些词，但搞不清它们的精确顺序和结构。</li>
+</ul>
+<h3 id="42-%E7%AC%AC%E4%BA%8C%E4%BB%A3%E9%97%A8%E6%8E%A7%E4%B8%8E%E9%80%89%E6%8B%A9%E6%9C%BA%E5%88%B6-gated-decay--selection">4.2 第二代：门控与选择机制 (Gated Decay / Selection)</h3>
+<p>为了解决“词袋”问题，研究者们意识到：<strong>记忆不能只是简单的累加，必须有选择地遗忘。</strong></p>
+<h4 id="421-%E6%A0%B8%E5%BF%83%E5%88%9B%E6%96%B0%E6%95%B0%E6%8D%AE%E4%BE%9D%E8%B5%96%E7%9A%84%E8%A1%B0%E5%87%8F-data-dependent-decay">4.2.1 核心创新：数据依赖的衰减 (Data-Dependent Decay)</h4>
+<p>在第一代模型中，如果引入衰减，通常是固定的（如 $S_t = \lambda S_{t-1} + \dots$）。而在第二代模型（Mamba, RWKV v5/v6, GLA）中，衰减率 $\alpha_t$ 是由当前输入 $x_t$ 动态计算的。</p>
+<p>$$ S_t = \alpha_t \odot S_{t-1} + \phi(k_t) v_t^T $$</p>
+<p>其中 $\alpha_t \in [0, 1]$ 是一个门控向量。</p>
+<h4 id="422-%E9%80%89%E6%8B%A9%E6%9C%BA%E5%88%B6-selection-mechanism">4.2.2 选择机制 (Selection Mechanism)</h4>
+<p>Gu &amp; Dao 在 Mamba 论文中将这种机制称为<strong>选择机制</strong>。它赋予了模型以下能力：</p>
+<ol>
+<li><strong>过滤噪声</strong>：遇到无意义的词（如停用词、无关插曲）时，将 $\alpha_t$ 设为接近 1（保持记忆），同时抑制新信息的写入。</li>
+<li><strong>重置上下文</strong>：当文章从“体育新闻”转折到“财经报道”时，模型可以将 $\alpha_t$ 设为接近 0，快速遗忘旧的体育上下文，为新信息腾出空间。</li>
+</ol>
+<h4 id="423-%E4%BE%8B%E5%AD%90%E6%8A%97%E5%99%AA%E4%BB%BB%E5%8A%A1">4.2.3 例子：抗噪任务</h4>
+<p>考虑任务：<code>[关键信息 A] ... [大量噪声文本] ... [提问 A?]</code></p>
+<ul>
+<li><strong>第一代模型</strong>：在处理噪声时，噪声不断累加到 $S_t$ 中，最终掩盖了 <code>关键信息 A</code>。</li>
+<li><strong>第二代模型</strong>：模型学会了在处理噪声时让“写入门”关闭，或者让“遗忘门”保持开启，从而让 $S_t$ 几乎不受噪声干扰，成功将 <code>关键信息 A</code> 传递到最后。</li>
+</ul>
+<p>这一改进使得线性 Attention 模型首次在困惑度（Perplexity）和下游任务上匹敌甚至超越了同等规模的 Transformer。</p>
+<h3 id="43-%E7%AC%AC%E4%B8%89%E4%BB%A3delta-%E8%A7%84%E5%88%99%E4%B8%8E%E7%B2%BE%E7%A1%AE%E7%8A%B6%E6%80%81%E8%BF%BD%E8%B8%AA-delta-rule--state-tracking">4.3 第三代：Delta 规则与精确状态追踪 (Delta Rule / State Tracking)</h3>
+<p>尽管第二代模型表现优异，但它们在处理<strong>联想回忆 (Associative Recall)</strong> 和 <strong>精确状态更新</strong> 任务时仍有短板。这催生了以 DeltaNet 和 RWKV v7 为代表的第三代线性注意力。</p>
+<h4 id="431-%E6%9C%80%E5%90%8E%E7%9A%84%E7%9F%AD%E6%9D%BF%E5%8F%98%E9%87%8F%E8%B5%8B%E5%80%BC%E9%97%AE%E9%A2%98">4.3.1 最后的短板：变量赋值问题</h4>
+<p>想象一个代码执行任务：</p>
+<ol>
+<li><code>x = 5</code></li>
+<li><code>...</code> (执行其他操作)</li>
+<li><code>x = 10</code></li>
+<li><code>print(x)</code></li>
+</ol>
+<ul>
+<li><strong>第二代模型</strong>：当看到 <code>x = 10</code> 时，它会试图记住 <code>x: 10</code>。但由于它只能“衰减”旧信息，<code>x: 5</code> 的残余可能仍然存在。最终记忆可能是 <code>x: 7.5</code>（混合态）。</li>
+<li><strong>理想行为</strong>：在写入 <code>x = 10</code> 之前，应该先<strong>精确擦除</strong>掉 <code>x</code> 之前的值，然后再写入新值。</li>
+</ul>
+<h4 id="432-delta-rule%E4%BB%8E%E4%BC%98%E5%8C%96%E8%A7%86%E8%A7%92%E7%9C%8B%E6%8E%A8%E5%AF%BC">4.3.2 Delta Rule：从优化视角看推导</h4>
+<p>第三代模型引入了<strong>减性更新 (Subtractive Update)</strong>，其数学本质是<strong>在线梯度下降 (Online Gradient Descent)</strong>。</p>
+<p><strong>推导来源</strong>：
+我们可以把记忆矩阵 $S$ 看作是一个试图拟合数据的线性模型。
+在时刻 $t$，我们的目标是让记忆 $S$ 能够根据键 $K_t$ 正确检索到值 $V_t$（即让 $S$ 记住这一对 KV 映射）。即希望：
+$$ S \cdot K_t \approx V_t $$
+（注：这是<strong>写入/优化目标</strong>，而模型实际输出时的<strong>读取操作</strong>依然是 $O_t = S \cdot Q_t$）</p>
+<p>为了达到这个目标，我们观察<strong>上一时刻的记忆 $S_{t-1}$</strong> 在当前数据上的表现，并计算其误差（Loss）：
+$$ \mathcal{L} = \frac{1}{2} | S_{t-1} K_t - V_t |^2 $$</p>
+<p>然后，我们根据这个误差对 $S_{t-1}$ 进行修正（梯度下降）：
+$$ \nabla_S \mathcal{L} = (S_{t-1} K_t - V_t) K_t^T $$
+（其中 $\nabla_S \mathcal{L}$ 代表<strong>梯度</strong>，即“误差 $\mathcal{L}$ 对记忆矩阵 $S$ 的导数”，它指明了 $S$ 应该如何变化才能最快地增大误差。为了<strong>减小</strong>误差，我们要反其道而行之，减去梯度。）</p>
+<p>$$ S_t = S_{t-1} - \eta \cdot \nabla_S \mathcal{L} $$</p>
+<p>代入梯度公式，并设学习率为 $\beta_t$，我们得到 Delta Rule 的核心公式：
+$$ S_t = S_{t-1} + \beta_t \underbrace{(V_t - S_{t-1}K_t)}_{\text{Delta (误差)}} \otimes K_t $$</p>
+<p><strong>物理意义：从“叠加”到“重写”</strong></p>
+<p>我们可以用<strong>黑板写字</strong>来类比这三代演进：</p>
+<ol>
+<li><strong>第一代（叠加）</strong>：你在黑板上写字，写满了也不擦，直接在旧字上面叠着写新字。最后黑板上一团漆黑，什么也认不出来（词袋效应）。</li>
+<li><strong>第二代（衰减）</strong>：黑板上的字会随时间自动变淡。你在写新字之前，旧字已经淡了一些。但这只是被动的遗忘，你无法主动擦除某个特定的错误。</li>
+<li><strong>第三代（Delta / 重写）</strong>：你手里拿了一个<strong>黑板擦</strong>。
+<ul>
+<li><strong>Predict</strong>: 你先看一眼黑板上 $K_t$ 这个位置现在写着什么 ($S_{t-1}K_t$)。</li>
+<li><strong>Error</strong>: 你对比一下你想写的内容 $V_t$ 和黑板上现有的内容。</li>
+<li><strong>Correct</strong>: 你算出差值，<strong>精准地擦掉</strong>旧的痕迹，然后填上新内容。</li>
+<li>这实现了真正的<strong>变量重写</strong>（Variable Overwriting），就像在编程语言中执行 <code>x = 10</code> 一样，旧的 <code>x=5</code> 被彻底清除了。</li>
+</ul>
+</li>
+</ol>
+<p>这与卡尔曼滤波（Kalman Filter）中的“预测-校正”步骤有着异曲同工之妙。</p>
+<p>如果展开公式，我们会发现它包含了一个显式的<strong>减法项</strong>：
+$$ S_t = S_{t-1} \underbrace{- \beta_t (S_{t-1} K_t) \otimes K_t}_{\text{擦除旧信息}} + \beta_t V_t \otimes K_t $$</p>
+<p>这意味着模型学会了在写入新信息之前，先将记忆矩阵在 $K_t$ 方向上的投影减去。这实现了<strong>正交化</strong>，保证了新旧信息不会混淆。</p>
+<h4 id="433-rwkv-v7-%E7%9A%84%E5%AE%9E%E7%8E%B0">4.3.3 RWKV v7 的实现</h4>
+<p>在 RWKV v7 的架构中，这一思想得到了工程化的落地。在 <code>src/model/rwkv_v7.rs</code> 或 <code>time_mix.rs</code> 中，我们可以观察到状态更新的核心逻辑包含类似以下的结构：</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// 伪代码示意</span>
+<span class="hljs-keyword">let</span> recall = state * k;      <span class="hljs-comment">// 回忆旧值</span>
+<span class="hljs-keyword">let</span> error = v - recall;      <span class="hljs-comment">// 计算差异</span>
+state = state + error * k;   <span class="hljs-comment">// 更新状态</span>
+</div></code></pre>
+<p>（注：实际实现中包含复杂的 Head 维度处理和 LoRA 门控，但核心数学原理一致）。</p>
+<p>这种机制使得 RWKV v7 不仅拥有 RNN 的推理速度，还具备了类似 Transformer 的精确“In-context Learning”能力，能够处理复杂的逻辑推理和状态追踪任务。</p>
+<h3 id="44-%E7%BA%BF%E6%80%A7%E4%B8%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E7%9A%84%E8%BE%A9%E8%AF%81%E4%B8%BA%E4%BB%80%E4%B9%88%E7%8E%B0%E4%BB%A3-rnn-%E6%98%AF%E7%BA%BF%E6%80%A7%E7%9A%84">4.4 线性与非线性的辩证：为什么现代 RNN 是“线性”的？</h3>
+<p>在结束这一章之前，我们需要澄清一个常见的误区。当我们说 RWKV 或 Mamba 是“线性注意力”或“线性 RNN”时，指的是<strong>状态更新方程关于状态 $S$ 是线性的</strong>。</p>
+<h4 id="441-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%BA%BF%E6%80%A7%E9%80%92%E5%BD%92why-linear-recurrence">4.4.1 为什么要线性递归？(Why Linear Recurrence?)</h4>
+<p>传统 RNN（如 LSTM）的状态更新包含非线性激活函数：
+$$ h_t = \tanh(W h_{t-1} + \dots) $$
+这种非线性使得 $h_t$ 无法直接展开为 $h_0$ 的闭式解，必须一步步串行计算。</p>
+<p>而现代线性 Attention 的更新方程（如 RWKV）：
+$$ S_t = A_t S_{t-1} + V_t K_t^T $$
+这里没有 $\tanh$ 或 $\text{sigmoid}$ 包裹 $S_{t-1}$。正是这种<strong>线性递推关系</strong>，使得我们可以利用<strong>结合律</strong>进行并行训练（Parallel Scan / Chunkwise Computation）。
+$$ S_2 = A_2 (A_1 S_0 + V_1 K_1^T) + V_2 K_2^T $$
+我们可以先算出所有 $A$ 的累乘，再并行计算结果。</p>
+<h4 id="442-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E9%9C%80%E8%A6%81%E9%9D%9E%E7%BA%BF%E6%80%A7%E9%80%92%E5%BD%92why-is-linear-sufficient">4.4.2 为什么不需要非线性递归？(Why is Linear Sufficient?)</h4>
+<p>既然去掉了递归中的非线性，模型会不会变“傻”？毕竟深度学习的核心就是非线性变换。</p>
+<p>答案是：<strong>不会，因为我们有层数（Depth）。</strong></p>
+<ul>
+<li><strong>分工明确</strong>：
+<ul>
+<li><strong>时间轴 (Time Mixing)</strong>：线性递归负责在时间维度上<strong>搬运</strong>信息。它像一条传送带，高效地把过去的记忆 $S_{t-1}$ 传给现在。</li>
+<li><strong>特征轴 (Channel Mixing)</strong>：每个 Block 中的 <strong>MLP 层</strong>（以及 Attention 中的 Output Projection）包含大量的非线性激活函数（GeLU, Swish）。</li>
+</ul>
+</li>
+<li><strong>堆叠效应</strong>：
+<ul>
+<li>虽然单层的递归是线性的，但当我们把“线性递归”和“非线性 MLP”交替堆叠几十层后，整个模型对输入的变换就是高度非线性的。</li>
+<li>这就像 Transformer：Self-Attention 内部也是线性的（加权求和），非线性主要来自 MLP 和多层堆叠。</li>
+</ul>
+</li>
+</ul>
+<p><strong>结论</strong>：现代 RNN 放弃了“时间步上的非线性”以换取并行训练能力，并通过“深度的非线性”来保证模型的表达能力。这是一个极其划算的交易。</p>
+<h2 id="5-%E6%80%BB%E7%BB%93">5. 总结</h2>
+<p>从 RNN 到 Transformer，我们获得了并行性；从 Transformer 到现代线性注意力（RWKV v7, Mamba），我们在保持并行性的同时，找回了 $O(1)$ 的推理效率，并正在通过 Delta Rule 攻克线性模型最后的短板——精确状态追踪。</p>
+<h2 id="6-%E5%BE%85%E5%8A%9E%E4%BA%8B%E9%A1%B9-todo">6. 待办事项 (TODO)</h2>
+<ul>
+<li><strong>并行训练与矩阵形式</strong>：解释 Transformer 如何在训练阶段利用矩阵运算一次性处理整个序列（Teacher Forcing）。</li>
+<li><strong>因果掩码 (Causal Mask)</strong>：详细解释如何在并行训练中防止模型“偷看”未来。</li>
+</ul>
+
+</body>
+</html>
