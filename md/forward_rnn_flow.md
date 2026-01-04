@@ -8,12 +8,13 @@
 
 ## 符号约定
 
-| 类型 | 约定 | 示例 |
-|------|------|------|
-| **标量** | 普通斜体小写 | $d$, $H$, $t$, $d_h$ |
-| **向量** | 粗体小写 | $\mathbf{x}$, $\mathbf{r}$, $\mathbf{k}$, $\mathbf{v}$ |
-| **矩阵** | 粗体大写 | $\mathbf{W}$, $\mathbf{S}$, $\mathbf{A}$ |
-| **集合/空间** | 花体大写 | $\mathbb{R}^d$ |
+| 类型          | 约定             | 示例                                                   |
+| ------------- | ---------------- | ------------------------------------------------------ |
+| **标量**      | 普通斜体小写     | $d$, $t$, $d_h$                                        |
+| **常量/超参** | 普通斜体大写     | $H$（头数）, $T$（序列长度）                           |
+| **向量**      | 粗体小写         | $\mathbf{x}$, $\mathbf{r}$, $\mathbf{k}$, $\mathbf{v}$ |
+| **矩阵**      | 粗体大写         | $\mathbf{W}$, $\mathbf{S}$, $\mathbf{A}$               |
+| **集合/空间** | 花体大写         | $\mathbb{R}^d$                                         |
 
 ---
 
@@ -21,35 +22,35 @@
 
 ### 标量参数
 
-| 符号 | 含义 | 说明 |
-|------|------|------|
-| $d$ | 模型维度 | `d_model` |
-| $H$ | 注意力头数 | `n_heads` |
-| $d_h$ | 每头维度 | `head_size = d/H` |
-| $t$ | 当前时间步 | 时序索引 |
+| 符号  | 含义       | 说明              |
+| ----- | ---------- | ----------------- |
+| $d$   | 模型维度   | `d_model`         |
+| $H$   | 注意力头数 | `n_heads`         |
+| $d_h$ | 每头维度   | `head_size = d/H` |
+| $t$   | 当前时间步 | 时序索引          |
 
 ### 向量变量
 
-| 符号 | 含义 | 维度 |
-|------|------|------|
-| $\mathbf{x}_t$ | 当前时刻输入 | $\mathbb{R}^d$ |
-| $\mathbf{x}_{t-1}$ | 前一时刻输入 | $\mathbb{R}^d$ |
-| $\mathbf{r}_t$ | Receptance 向量 | $\mathbb{R}^d$ |
-| $\mathbf{k}_t$ | Key 向量 | $\mathbb{R}^d$ |
-| $\mathbf{v}_t$ | Value 向量 | $\mathbb{R}^d$ |
-| $\mathbf{w}_t$ | 衰减权重向量 | $\mathbb{R}^d$ |
-| $\boldsymbol{\alpha}_t$ | 注意力门向量 | $\mathbb{R}^d$ |
-| $\mathbf{g}_t$ | 输出门向量 | $\mathbb{R}^d$ |
-| $\boldsymbol{\mu}$ | 混合系数向量 | $\mathbb{R}^d$ |
+| 符号                    | 含义            | 维度           |
+| ----------------------- | --------------- | -------------- |
+| $\mathbf{x}_t$          | 当前时刻输入    | $\mathbb{R}^d$ |
+| $\mathbf{x}_{t-1}$      | 前一时刻输入    | $\mathbb{R}^d$ |
+| $\mathbf{r}_t$          | Receptance 向量 | $\mathbb{R}^d$ |
+| $\mathbf{k}_t$          | Key 向量        | $\mathbb{R}^d$ |
+| $\mathbf{v}_t$          | Value 向量      | $\mathbb{R}^d$ |
+| $\mathbf{w}_t$          | 衰减权重向量    | $\mathbb{R}^d$ |
+| $\boldsymbol{\alpha}_t$ | 注意力门向量    | $\mathbb{R}^d$ |
+| $\mathbf{g}_t$          | 输出门向量      | $\mathbb{R}^d$ |
+| $\boldsymbol{\mu}$      | 混合系数向量    | $\mathbb{R}^d$ |
 
 ### 矩阵变量
 
-| 符号 | 含义 | 维度 |
-|------|------|------|
-| $\mathbf{S}_{t}$ | 状态矩阵 (`vk_state`) | $\mathbb{R}^{H \times d_h \times d_h}$ |
-| $\mathbf{W}_r, \mathbf{W}_k, \mathbf{W}_v, \mathbf{W}_o$ | 投影矩阵 | $\mathbb{R}^{d \times d}$ |
-| $\mathbf{VK}_t$ | Value-Key 外积矩阵 | $\mathbb{R}^{H \times d_h \times d_h}$ |
-| $\mathbf{AB}_t$ | Delta Rule 校正矩阵 | $\mathbb{R}^{H \times d_h \times d_h}$ |
+| 符号                                                     | 含义                  | 维度                                   |
+| -------------------------------------------------------- | --------------------- | -------------------------------------- |
+| $\mathbf{S}_{t}$                                         | 状态矩阵 (`vk_state`) | $\mathbb{R}^{H \times d_h \times d_h}$ |
+| $\mathbf{W}_r, \mathbf{W}_k, \mathbf{W}_v, \mathbf{W}_o$ | 投影矩阵              | $\mathbb{R}^{d \times d}$              |
+| $\mathbf{VK}_t$                                          | Value-Key 外积矩阵    | $\mathbb{R}^{H \times d_h \times d_h}$ |
+| $\mathbf{AB}_t$                                          | Delta Rule 校正矩阵   | $\mathbb{R}^{H \times d_h \times d_h}$ |
 
 ---
 
@@ -83,6 +84,7 @@ $$
 $$
 
 其中：
+
 - $\mathbf{x}_t \in \mathbb{R}^d$：当前时刻的隐藏状态输入向量
 - $\mathbf{x}_{t-1} \in \mathbb{R}^d$：前一时刻的隐藏状态输入向量
 - $\Delta \mathbf{x}_t \in \mathbb{R}^d$：时间差分向量
@@ -105,6 +107,7 @@ $$
 $$
 
 其中：
+
 - $\boldsymbol{\mu}_r, \boldsymbol{\mu}_w, \boldsymbol{\mu}_k, \boldsymbol{\mu}_v, \boldsymbol{\mu}_a, \boldsymbol{\mu}_g \in \mathbb{R}^d$ 是可学习的混合系数向量（对应代码中的 `x_r`, `x_w`, `x_k`, `x_v`, `x_a`, `x_g`）
 - $\odot$ 表示逐元素乘法 (Hadamard product)
 - 当 $\boldsymbol{\mu} = \mathbf{0}$ 时，$\tilde{\mathbf{x}}_t = \mathbf{x}_t$（使用当前输入）
@@ -147,6 +150,7 @@ $$
 $$
 
 其中：
+
 - $\mathbf{W}_1^{(w)} \in \mathbb{R}^{d \times d_{\text{lora}}}$, $\mathbf{W}_2^{(w)} \in \mathbb{R}^{d_{\text{lora}} \times d}$ 是 LoRA 分解矩阵
 - $\mathbf{w}_0 \in \mathbb{R}^d$ 是基础衰减偏置向量
 - $\sigma(\cdot)$ 是 sigmoid 函数
@@ -160,6 +164,7 @@ $$
 $$
 
 其中：
+
 - $\mathbf{W}_1^{(a)}, \mathbf{W}_2^{(a)}$ 是 LoRA 分解矩阵
 - $\mathbf{a}_0 \in \mathbb{R}^d$ 是偏置向量
 - $\boldsymbol{\alpha}_t \in (0, 1)^d$ 控制 Delta Rule 的更新强度
@@ -181,6 +186,7 @@ $$
 $$
 
 其中：
+
 - $\boldsymbol{\kappa}_k \in \mathbb{R}^d$ 是可学习的缩放参数向量 (`k_k`)
 - 归一化按每个注意力头独立进行（reshape 为 $[H, d_h]$ 后按 dim=1 归一化）
 - $\bar{\mathbf{k}}_t$ 是单位向量，用于 Delta Rule 的正交投影
@@ -192,6 +198,7 @@ $$
 $$
 
 其中：
+
 - $\boldsymbol{\kappa}_a \in \mathbb{R}^d$ 是可学习参数向量 (`k_a`)
 - 当 $\boldsymbol{\alpha}_t = \mathbf{1}$ 时，$\mathbf{k}_t' = \mathbf{k}_t$
 - 当 $\boldsymbol{\alpha}_t = \mathbf{0}$ 时，$\mathbf{k}_t' = \mathbf{k}_t \odot (\mathbf{1} - \boldsymbol{\kappa}_a)$
@@ -210,6 +217,7 @@ $$
 $$
 
 其中：
+
 - $\mathbf{v}_0$ 是序列第一个 token 的 value 向量（`v_first`）
 - $\mathbf{v}^{(0)}, \mathbf{W}_1^{(v)}, \mathbf{W}_2^{(v)}$ 是可学习参数
 - 这种设计让模型能够在整个序列中保持对起始位置信息的访问
@@ -223,11 +231,13 @@ $$
 #### 6.1 构建外积矩阵
 
 **Value-Key 外积矩阵**（新信息写入）：
+
 $$
 \mathbf{VK}_t = \mathbf{v}_t \otimes \mathbf{k}_t' = \mathbf{v}_t (\mathbf{k}_t')^\top \in \mathbb{R}^{H \times d_h \times d_h}
 $$
 
 **Delta Rule 校正矩阵**（旧信息擦除）：
+
 $$
 \mathbf{AB}_t = -\bar{\mathbf{k}}_t \otimes (\bar{\mathbf{k}}_t \odot \boldsymbol{\alpha}_t) = -\bar{\mathbf{k}}_t (\bar{\mathbf{k}}_t \odot \boldsymbol{\alpha}_t)^\top \in \mathbb{R}^{H \times d_h \times d_h}
 $$
@@ -248,11 +258,11 @@ $$
 
 **三个组成部分的作用**：
 
-| 项 | 公式 | 作用 | 来源 |
-|---|---|---|---|
-| (1) 衰减 | $\mathbf{S}_{t-1} \odot \mathbf{w}_t$ | 指数遗忘旧信息 | RWKV 传统设计 |
+| 项       | 公式                                   | 作用                                   | 来源           |
+| -------- | -------------------------------------- | -------------------------------------- | -------------- |
+| (1) 衰减 | $\mathbf{S}_{t-1} \odot \mathbf{w}_t$  | 指数遗忘旧信息                         | RWKV 传统设计  |
 | (2) 校正 | $\mathbf{S}_{t-1} \cdot \mathbf{AB}_t$ | 沿 $\bar{\mathbf{k}}_t$ 方向擦除旧记忆 | **Delta Rule** |
-| (3) 写入 | $\mathbf{v}_t (\mathbf{k}_t')^\top$ | 写入新的 key-value 关联 | 线性注意力 |
+| (3) 写入 | $\mathbf{v}_t (\mathbf{k}_t')^\top$    | 写入新的 key-value 关联                | 线性注意力     |
 
 > **Delta Rule 的直觉**：在写入新信息之前，先将状态矩阵在 $\bar{\mathbf{k}}_t$ 方向上的分量减去。这实现了**正交化**，保证新旧信息不会混淆，类似于 Hopfield 网络的联想记忆更新规则。
 
@@ -267,6 +277,7 @@ $$
 $$
 
 其中：
+
 - $\mathbf{r}_t$ 被 reshape 为 $[H, d_h, 1]$ 后与 $\mathbf{S}_t \in \mathbb{R}^{H \times d_h \times d_h}$ 进行矩阵乘法
 - 结果 reshape 为 $[d]$ 后通过 GroupNorm
 
@@ -277,6 +288,7 @@ $$
 $$
 
 其中：
+
 - $\boldsymbol{\rho}_k \in \mathbb{R}^{H \times d_h}$ 是可学习参数向量 (`r_k`)
 - 上标 $(h)$ 表示第 $h$ 个注意力头的对应分量
 - 这是一个绕过状态矩阵的直接 key-value 交互项
@@ -298,6 +310,7 @@ $$
 $$
 
 其中：
+
 - $\mathbf{g}_t$ 是输出门向量（output gate）
 - $\mathbf{W}_o \in \mathbb{R}^{d \times d}$ 是输出投影矩阵
 - $\mathbf{y}_t \in \mathbb{R}^d$ 是最终输出向量
@@ -404,43 +417,47 @@ $$
 
 ## 张量形状汇总
 
-| 代码变量 | 数学符号 | 类型 | 形状 | 说明 |
-|----------|----------|------|------|------|
-| `x`, `x_prev` | $\mathbf{x}_t$, $\mathbf{x}_{t-1}$ | 向量 | $[d]$ | 输入 |
-| `xx` | $\Delta \mathbf{x}_t$ | 向量 | $[d]$ | 时间差分 |
-| `xr`, `xw`, ... | $\tilde{\mathbf{x}}_t^{(\cdot)}$ | 向量 | $[d]$ | 混合后的特征 |
-| `r` | $\mathbf{r}_t$ | 向量 | $[d]$ | Receptance |
-| `w` | $\mathbf{w}_t$ | 向量 | $[d] \to [H, 1, d_h]$ | 衰减权重 |
-| `k` | $\mathbf{k}_t \to \mathbf{k}_t'$ | 向量 | $[d]$ | Key（原始 → 调制后）|
-| `v` | $\mathbf{v}_t$ | 向量 | $[d]$ | Value |
-| `a` | $\boldsymbol{\alpha}_t$ | 向量 | $[d]$ | Attention gate |
-| `g` | $\mathbf{g}_t$ | 向量 | $[d]$ | Output gate |
-| `kk` | $\bar{\mathbf{k}}_t$ | 向量 | $[d]$ | 归一化的 key |
-| `vk` | $\mathbf{VK}_t$ | 矩阵 | $[H, d_h, d_h]$ | $\mathbf{v}_t \otimes \mathbf{k}_t'$ 外积 |
-| `ab` | $\mathbf{AB}_t$ | 矩阵 | $[H, d_h, d_h]$ | Delta Rule 矩阵 |
-| `vk_state` | $\mathbf{S}_t$ | 矩阵 | $[H, d_h, d_h]$ | 状态张量 |
-| `out` | $\mathbf{y}_t$ | 向量 | $[d]$ | 最终输出 |
+| 代码变量        | 数学符号                           | 类型 | 形状                  | 说明                                      |
+| --------------- | ---------------------------------- | ---- | --------------------- | ----------------------------------------- |
+| `x`, `x_prev`   | $\mathbf{x}_t$, $\mathbf{x}_{t-1}$ | 向量 | $[d]$                 | 输入                                      |
+| `xx`            | $\Delta \mathbf{x}_t$              | 向量 | $[d]$                 | 时间差分                                  |
+| `xr`, `xw`, ... | $\tilde{\mathbf{x}}_t^{(\cdot)}$   | 向量 | $[d]$                 | 混合后的特征                              |
+| `r`             | $\mathbf{r}_t$                     | 向量 | $[d]$                 | Receptance                                |
+| `w`             | $\mathbf{w}_t$                     | 向量 | $[d] \to [H, 1, d_h]$ | 衰减权重                                  |
+| `k`             | $\mathbf{k}_t \to \mathbf{k}_t'$   | 向量 | $[d]$                 | Key（原始 → 调制后）                      |
+| `v`             | $\mathbf{v}_t$                     | 向量 | $[d]$                 | Value                                     |
+| `a`             | $\boldsymbol{\alpha}_t$            | 向量 | $[d]$                 | Attention gate                            |
+| `g`             | $\mathbf{g}_t$                     | 向量 | $[d]$                 | Output gate                               |
+| `kk`            | $\bar{\mathbf{k}}_t$               | 向量 | $[d]$                 | 归一化的 key                              |
+| `vk`            | $\mathbf{VK}_t$                    | 矩阵 | $[H, d_h, d_h]$       | $\mathbf{v}_t \otimes \mathbf{k}_t'$ 外积 |
+| `ab`            | $\mathbf{AB}_t$                    | 矩阵 | $[H, d_h, d_h]$       | Delta Rule 矩阵                           |
+| `vk_state`      | $\mathbf{S}_t$                     | 矩阵 | $[H, d_h, d_h]$       | 状态张量                                  |
+| `out`           | $\mathbf{y}_t$                     | 向量 | $[d]$                 | 最终输出                                  |
 
 ---
 
 ## 关键公式总结卡片
 
 ### Token Mixing
+
 $$
 \tilde{\mathbf{x}}_t = \mathbf{x}_t + (\mathbf{x}_{t-1} - \mathbf{x}_t) \odot \boldsymbol{\mu}
 $$
 
 ### Decay Weight
+
 $$
 \mathbf{w}_t = \exp\left( \sigma(\mathbf{w}_{\text{combined}}) \cdot (-0.606531) \right) \in (0, 1)^d
 $$
 
 ### Delta Rule 状态更新
+
 $$
 \mathbf{S}_t = \mathbf{S}_{t-1} \odot \mathbf{w}_t - \mathbf{S}_{t-1} \bar{\mathbf{k}}_t (\bar{\mathbf{k}}_t \odot \boldsymbol{\alpha}_t)^\top + \mathbf{v}_t (\mathbf{k}_t')^\top
 $$
 
 ### 输出计算
+
 $$
 \mathbf{y}_t = \mathbf{W}_o \left( \left[ \text{GroupNorm}(\mathbf{S}_t \cdot \mathbf{r}_t) + \mathbf{Bonus}_t \right] \odot \mathbf{g}_t \right)
 $$
@@ -449,13 +466,13 @@ $$
 
 ## 与标准 Transformer 的对比
 
-| 特性 | Transformer | RWKV-7 |
-|------|-------------|--------|
-| 注意力复杂度 | $O(T^2 d)$ | $O(T d^2)$ |
-| 状态大小 | $O(T)$ KV Cache | $O(1)$ 固定大小 $[H, d_h, d_h]$ |
-| 信息更新 | Softmax 加权 | Delta Rule + 指数衰减 |
-| 推理模式 | 需要完整历史 | 可逐 token RNN 推理 |
+| 特性         | Transformer     | RWKV-7                          |
+| ------------ | --------------- | ------------------------------- |
+| 注意力复杂度 | $O(T^2 d)$      | $O(T d^2)$                      |
+| 状态大小     | $O(T)$ KV Cache | $O(1)$ 固定大小 $[H, d_h, d_h]$ |
+| 信息更新     | Softmax 加权    | Delta Rule + 指数衰减           |
+| 推理模式     | 需要完整历史    | 可逐 token RNN 推理             |
 
 ---
 
-*此文档基于 RWKV-7 "Goose" TimeMix 实现生成，参考 Delta Rule 线性注意力机制设计*
+_此文档基于 RWKV-7 "Goose" TimeMix 实现生成，参考 Delta Rule 线性注意力机制设计_
