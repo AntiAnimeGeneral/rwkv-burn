@@ -7,8 +7,8 @@
 1.  **[第一章：早期基石与 Transformer 体系](01_早期基石与Transformer体系.md)**
     - RNN 的串行计算瓶颈
     - Transformer：并行与注意力机制（Embedding、Self-Attention、MLP、位置编码等）
-    - 自回归生成范式
-    - _TODO: 并行训练与矩阵形式_
+    - GPT 类模型的工作全流程（Tokenization、Prefill 和 Decode 阶段）
+    - GPT 类模型的训练范式（并行机制、Teacher Forcing 与因果掩码）
 2.  **[第二章：效率演进与计算极限](02_效率演进与计算极限.md)**
     - 第一代线性注意力：核方法与“词袋”困境
     - 第二代线性注意力：门控与选择机制 (Mamba, RWKV v5/v6)
